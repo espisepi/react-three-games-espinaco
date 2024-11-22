@@ -1,6 +1,6 @@
 import Box from "../../../prefabs/box/Box"
 
-const Scene1 = () => {
+const Scene0 = () => {
   return (
     <>
       <ambientLight intensity={Math.PI / 2} />
@@ -13,8 +13,9 @@ const Scene1 = () => {
       />
       <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
       <Box position={[-1.2, 0, 0]} />
+      <Box position={[1.2, 0, 0]} />
     </>
   )
 }
 
-export default Scene1
+export default Scene0
