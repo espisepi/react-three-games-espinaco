@@ -1,0 +1,8 @@
+- crear proyecto
+-- Visitar https://redux.js.org/introduction/getting-started
+-- clonar repositorio react + redux + ts:
+-- npx degit reduxjs/redux-templates/packages/vite-template-redux react-three-games-espinaco
+
+- crear la carpeta modules y añadir react-router y lazy loading react
+para acceder a los distintos modulos con enlaces router
+
