@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react"
 import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Stats } from "@react-three/drei"
+import { Stats } from "@react-three/drei"
 import SceneManager from "../../scenes/manager/SceneManager"
 import ControlsManager from "../../controls/manager/ControlsManager"
 
@@ -9,8 +9,6 @@ interface CanvasDefaultProps {
 }
 
 export default function CanvasR3F({
-  // style = { position: "absolute", top: "0", width: "100%", height: "100vh", backgroundColor: "black"  },
-  // style,
   style = { position: "fixed", top: 0, left: 0, width: "100%", height: "100%" },
 }: CanvasDefaultProps): JSX.Element {
   return (
