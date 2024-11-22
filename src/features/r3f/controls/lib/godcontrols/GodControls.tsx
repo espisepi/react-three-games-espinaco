@@ -15,16 +15,16 @@ export default function GodControls({ position }: GodControlsProps): JSX.Element
   const [yaw, setYaw] = useState(0);
   const [pitch, setPitch] = useState(0);
 
-  useEffect(() => {
-    if (position) {
-      camera.position.set(position[0], position[1], position[2]);
-    }
-  }, [position, camera]);
+  // useEffect(() => {
+  //   if (position) {
+  //     camera.position.set(position[0], position[1], position[2]);
+  //   }
+  // }, [position, camera]);
 
-  useEffect(() => {
-    // @ts-ignore
-    (window as any).camera = camera;
-  }, [camera]);
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   (window as any).camera = camera;
+  // }, [camera]);
 
   const speedKeyPress = useKeyPress("ShiftLeft");
   const moveForwardKeyPress = useKeyPress("w");
