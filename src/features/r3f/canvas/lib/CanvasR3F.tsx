@@ -2,6 +2,7 @@ import type { CSSProperties } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Stats } from "@react-three/drei"
 import SceneManager from "../../scenes/manager/SceneManager"
+import ControlsManager from "../../controls/manager/ControlsManager"
 
 interface CanvasDefaultProps {
   style?: CSSProperties
@@ -22,7 +23,8 @@ export default function CanvasR3F({
       <Stats />
 
       <SceneManager />
-      <OrbitControls />
+
+      <ControlsManager />
     </Canvas>
   )
 }
