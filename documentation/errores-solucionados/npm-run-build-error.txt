@@ -1,0 +1,22 @@
+
+Error:
+
+error al hacer npm run build:
+
+ error TS6305: Output file '/Users/joseangel/Proyectos/recursos-proyectos-base/r3f-threejs-proyectos/react-three-games-espinaco/vite.config.d.ts' has not been built from source file '/Users/joseangel/Proyectos/recursos-proyectos-base/r3f-threejs-proyectos/react-three-games-espinaco/vite.config.ts'.
+  The file is in the program because:
+    Matched by default include pattern '**/*'
+Found 1 error.
+
+Me daba este error porque fallaba el fichero vite-config.ts,
+asi que la solucion ha sido que el eslint no lo tenga en cuenta xD
+
+============================================
+
+Solucion:
+
+- añadir al fichero .eslintrc.json:
+-- "ignorePatterns": ["dist", "vite.config.ts"],
+
+- añadir al fichero tsconfig.json
+-- "exclude": ["vite.config.ts", "node_modules"],
