@@ -5,7 +5,10 @@ const AppR3F = () => {
     <div className="App">
       <header className="App-header">
         <h1>HOLA MUNDO AppR3F</h1>
+
+        {/* <CanvasManager style={ {backgroundColor: "black"} } /> */}
         <CanvasManager />
+
       </header>
     </div>
   )
