@@ -1,0 +1,77 @@
+Lista de TODOs
+
+- Rollercoaster con storytelling disney
+-- 1 - movimiento de camara mostrando el escenario
+-- 2 - interaccion para montarse en el Rollercoaster
+-- 3 - control e interaccion rollercoaster en movimiento
+-- Definirlo todo en un data.json y crear clean code para interpretar ese json y manejarlo en tiempo real
+
+data.json example:
+
+{
+  "scenes": [
+    {
+      "id": "scene1",
+      "camera": {
+        "position": [0, 2, 5],
+        "target": [0, 0, 0]
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "Haz clic aquí para continuar",
+          "position": [0, 2, 0],
+          "fontSize": 0.8,
+          "color": "white",
+          "events": {
+            "onClick": "goToScene2"
+          }
+        },
+        {
+          "type": "sound",
+          "url": "/sounds/intro.mp3",
+          "playOnLoad": true,
+          "loop": false
+        }
+      ]
+    },
+    {
+      "id": "scene2",
+      "camera": {
+        "position": [0, 5, 10],
+        "target": [0, 0, 0]
+      },
+      "elements": [
+        {
+          "type": "text",
+          "content": "La aventura continúa...",
+          "position": [0, 3, 0],
+          "fontSize": 1,
+          "color": "yellow"
+        },
+        {
+          "type": "particleSystem",
+          "count": 500,
+          "color": "white",
+          "size": 0.1,
+          "timeline": [
+            { "time": 0, "action": { "visible": true } },
+            { "time": 5, "action": { "visible": false } }
+          ]
+        },
+        {
+          "type": "sound",
+          "url": "/sounds/scene2.mp3",
+          "playOnLoad": true,
+          "loop": true
+        }
+      ]
+    }
+  ],
+  "events": {
+    "goToScene2": {
+      "action": "changeScene",
+      "targetScene": "scene2"
+    }
+  }
+}
