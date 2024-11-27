@@ -16,6 +16,7 @@ data.json example:
         "position": [0, 2, 5],
         "target": [0, 0, 0]
       },
+      controls: "orbitcontrols",
       "elements": [
         {
           "type": "text",
