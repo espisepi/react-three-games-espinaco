@@ -5,6 +5,7 @@ import { selectControlsType } from "../store/controlsSlice"
 import {
   GodControlsTypeValue,
   OrbitControlsTypeValue,
+  UndefinedControlsTypeValue,
 } from "../types/controlsType"
 
 const ControlsManager = () => {
@@ -24,6 +25,10 @@ const ControlsManager = () => {
         <GodControls />
       </>
     )
+  }
+
+  if (controlsType === UndefinedControlsTypeValue) {
+    return <></>
   }
 
   return <></>

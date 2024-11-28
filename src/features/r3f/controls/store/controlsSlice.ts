@@ -1,9 +1,8 @@
-import type { PayloadAction } from "@reduxjs/toolkit"
 import { createAppSlice } from "../../../../app/createAppSlice"
-import type { AppThunk } from "../../../../app/store"
 import {
   GodControlsTypeValue,
   OrbitControlsTypeValue,
+  UndefinedControlsTypeValue,
   type ControlsType,
 } from "../types/controlsType"
 
@@ -13,7 +12,7 @@ export interface ControlsSliceState {
 
 const initialState: ControlsSliceState = {
   currentControlsType: OrbitControlsTypeValue,
-//   currentControlsType: GodControlsTypeValue,
+  //   currentControlsType: GodControlsTypeValue,
 }
 
 // If you are not using async thunks you can use the standalone `createSlice`.
@@ -29,6 +28,10 @@ export const controlsSlice = createAppSlice({
 
     setGodControls: create.reducer(state => {
       state.currentControlsType = GodControlsTypeValue
+    }),
+
+    setUndefinedControls: create.reducer(state => {
+      state.currentControlsType = UndefinedControlsTypeValue
     }),
   }),
   // You can define your selectors here. These selectors receive the slice
