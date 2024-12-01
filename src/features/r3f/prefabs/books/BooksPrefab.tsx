@@ -7,6 +7,7 @@ import { UI } from "./components/UI"
 export function BooksPrefab(): JSX.Element {
   return (
     <>
+      <UI />
       <group position-y={0}>
         <Suspense fallback={null}>
           <Experience />

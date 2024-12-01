@@ -21,14 +21,14 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js"
 import { pageAtom, pages } from "./UI"
 
-const easingFactor = 0.5
-const easingFactorFold = 0.3
-const insideCurveStrength = 0.18
-const outsideCurveStrength = 0.05
-const turningCurveStrength = 0.09
+const easingFactor = 0.5 // Controls the speed of the easing
+const easingFactorFold = 0.3 // Controls the speed of the easing
+const insideCurveStrength = 0.18 // Controls the strength of the curve
+const outsideCurveStrength = 0.05 // Controls the strength of the curve
+const turningCurveStrength = 0.09 // Controls the strength of the curve
 
 const PAGE_WIDTH = 1.28
-const PAGE_HEIGHT = 1.71
+const PAGE_HEIGHT = 1.71 // 4:3 aspect ratio
 const PAGE_DEPTH = 0.003
 const PAGE_SEGMENTS = 30
 const SEGMENT_WIDTH = PAGE_WIDTH / PAGE_SEGMENTS
@@ -43,20 +43,21 @@ const pageGeometry = new BoxGeometry(
 
 pageGeometry.translate(PAGE_WIDTH / 2, 0, 0)
 
-const position = pageGeometry.attributes.position as Float32BufferAttribute
+const position = pageGeometry.attributes.position
 const vertex = new Vector3()
-const skinIndexes: number[] = []
-const skinWeights: number[] = []
+const skinIndexes = []
+const skinWeights = []
 
 for (let i = 0; i < position.count; i++) {
-  vertex.fromBufferAttribute(position, i)
-  const x = vertex.x
+  // ALL VERTICES
+  vertex.fromBufferAttribute(position, i) // get the vertex
+  const x = vertex.x // get the x position of the vertex
 
-  const skinIndex = Math.max(0, Math.floor(x / SEGMENT_WIDTH))
-  let skinWeight = (x % SEGMENT_WIDTH) / SEGMENT_WIDTH
+  const skinIndex = Math.max(0, Math.floor(x / SEGMENT_WIDTH)) // calculate the skin index
+  let skinWeight = (x % SEGMENT_WIDTH) / SEGMENT_WIDTH // calculate the skin weight
 
-  skinIndexes.push(skinIndex, skinIndex + 1, 0, 0)
-  skinWeights.push(1 - skinWeight, skinWeight, 0, 0)
+  skinIndexes.push(skinIndex, skinIndex + 1, 0, 0) // set the skin indexes
+  skinWeights.push(1 - skinWeight, skinWeight, 0, 0) // set the skin weights
 }
 
 pageGeometry.setAttribute(
@@ -117,22 +118,25 @@ const Page: FC<PageProps> = ({
       ? [`/textures/book-cover-roughness.jpg`]
       : []),
   ])
-
   picture.colorSpace = picture2.colorSpace = SRGBColorSpace
-  const group = useRef<Group>(null)
+  const group = useRef<Group>()
   const turnedAt = useRef<number>(0)
   const lastOpened = useRef<boolean>(opened)
 
-  const skinnedMeshRef = useRef<SkinnedMesh>(null)
+  const skinnedMeshRef = useRef<SkinnedMesh>()
 
   const manualSkinnedMesh = useMemo(() => {
     const bones: Bone[] = []
     for (let i = 0; i <= PAGE_SEGMENTS; i++) {
       const bone = new Bone()
       bones.push(bone)
-      bone.position.x = i === 0 ? 0 : SEGMENT_WIDTH
+      if (i === 0) {
+        bone.position.x = 0
+      } else {
+        bone.position.x = SEGMENT_WIDTH
+      }
       if (i > 0) {
-        bones[i - 1].add(bone)
+        bones[i - 1].add(bone) // attach the new bone to the previous bone
       }
     }
     const skeleton = new Skeleton(bones)
@@ -166,7 +170,6 @@ const Page: FC<PageProps> = ({
         emissiveIntensity: 0,
       }),
     ]
-
     const mesh = new SkinnedMesh(pageGeometry, materials)
     mesh.castShadow = true
     mesh.receiveShadow = true
@@ -174,10 +177,14 @@ const Page: FC<PageProps> = ({
     mesh.add(skeleton.bones[0])
     mesh.bind(skeleton)
     return mesh
-  }, [picture, picture2, pictureRoughness])
+  }, [])
+
+  // useHelper(skinnedMeshRef, SkeletonHelper, "red");
 
   useFrame((_, delta) => {
-    if (!skinnedMeshRef.current) return
+    if (!skinnedMeshRef.current) {
+      return
+    }
 
     const emissiveIntensity = highlighted ? 0.22 : 0
     // @ts-ignore
@@ -191,17 +198,56 @@ const Page: FC<PageProps> = ({
       )
 
     if (lastOpened.current !== opened) {
-      turnedAt.current = Date.now()
+      turnedAt.current = +new Date()
       lastOpened.current = opened
     }
+    // @ts-ignore
+    let turningTime = Math.min(400, new Date() - turnedAt.current) / 400
+    turningTime = Math.sin(turningTime * Math.PI)
 
-    const turningTime = Math.min(400, Date.now() - turnedAt.current) / 400
-    const targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
+    let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
+    if (!bookClosed) {
+      targetRotation += degToRad(number * 0.8)
+    }
 
     const bones = skinnedMeshRef.current.skeleton.bones
-    bones.forEach((bone, i) => {
-      // Logic for bone rotations here...
-    })
+    for (let i = 0; i < bones.length; i++) {
+      const target = i === 0 ? group.current : bones[i]
+
+      const insideCurveIntensity = i < 8 ? Math.sin(i * 0.2 + 0.25) : 0
+      const outsideCurveIntensity = i >= 8 ? Math.cos(i * 0.3 + 0.09) : 0
+      const turningIntensity =
+        Math.sin(i * Math.PI * (1 / bones.length)) * turningTime
+      let rotationAngle =
+        insideCurveStrength * insideCurveIntensity * targetRotation -
+        outsideCurveStrength * outsideCurveIntensity * targetRotation +
+        turningCurveStrength * turningIntensity * targetRotation
+      let foldRotationAngle = degToRad(Math.sign(targetRotation) * 2)
+      if (bookClosed) {
+        if (i === 0) {
+          rotationAngle = targetRotation
+          foldRotationAngle = 0
+        } else {
+          rotationAngle = 0
+          foldRotationAngle = 0
+        }
+      }
+      // @ts-ignore
+      easing.dampAngle(target.rotation, "y", rotationAngle, easingFactor, delta)
+
+      const foldIntensity =
+        i > 8
+          ? Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime
+          : 0
+      easing.dampAngle(
+        // @ts-ignore
+        target.rotation,
+        "x",
+        foldRotationAngle * foldIntensity,
+        easingFactorFold,
+        delta,
+      )
+    }
   })
 
   const [_, setPage] = useAtom(pageAtom)
@@ -211,6 +257,7 @@ const Page: FC<PageProps> = ({
   return (
     <group
       {...props}
+      // @ts-ignore
       ref={group}
       onPointerEnter={e => {
         e.stopPropagation()
@@ -235,27 +282,37 @@ const Page: FC<PageProps> = ({
   )
 }
 
-export const Book: FC = ({ ...props }) => {
+export const Book = ({ ...props }) => {
   const [page] = useAtom(pageAtom)
   const [delayedPage, setDelayedPage] = useState(page)
 
   useEffect(() => {
     let timeout: number
-
     const goToPage = () => {
+      // @ts-ignore
       setDelayedPage(delayedPage => {
-        if (page === delayedPage) return delayedPage
-
-        timeout = setTimeout(
-          goToPage,
-          Math.abs(page - delayedPage) > 2 ? 50 : 150,
-        )
-        return page > delayedPage ? delayedPage + 1 : delayedPage - 1
+        if (page === delayedPage) {
+          return delayedPage
+        } else {
+          timeout = setTimeout(
+            () => {
+              goToPage()
+            },
+            Math.abs(page - delayedPage) > 2 ? 50 : 150,
+          )
+          if (page > delayedPage) {
+            return delayedPage + 1
+          }
+          if (page < delayedPage) {
+            return delayedPage - 1
+          }
+        }
       })
     }
-
     goToPage()
-    return () => clearTimeout(timeout)
+    return () => {
+      clearTimeout(timeout)
+    }
   }, [page])
 
   return (
