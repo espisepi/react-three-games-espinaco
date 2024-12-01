@@ -13,7 +13,7 @@ export const Experience: FC = () => {
       >
         <Book />
       </Float>
-      <OrbitControls />
+      {/* <OrbitControls /> */}
       <Environment preset="studio" />
       <directionalLight
         position={[2, 5, 2]}

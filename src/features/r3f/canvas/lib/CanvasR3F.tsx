@@ -5,7 +5,6 @@ import { Stats } from "@react-three/drei"
 import SceneManager from "../../scenes/manager/SceneManager"
 import ControlsManager from "../../controls/manager/ControlsManager"
 
-
 const defaultCanvasStyle: CSSProperties = {
   position: "fixed",
   top: 0,
@@ -17,6 +16,7 @@ const defaultCanvasStyle: CSSProperties = {
 export default function CanvasR3F({ style }: CanvasProps): JSX.Element {
   return (
     <Canvas
+      shadows
       style={{ ...defaultCanvasStyle, ...style }}
       camera={{
         far: 9999999,
