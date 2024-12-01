@@ -9,9 +9,9 @@ export function BooksPrefab(): JSX.Element {
     <>
       <UI />
       <group position-y={0}>
-        <Suspense fallback={null}>
+        {/* <Suspense fallback={null}> */}
           <Experience />
-        </Suspense>
+        {/* </Suspense> */}
       </group>
     </>
   )
