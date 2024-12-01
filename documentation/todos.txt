@@ -1,5 +1,10 @@
 Lista de TODOs
 
+- Permitir Subir imagenes y que se vean en el libro book
+-- Guardar esa data.json para que se pueda compartir ese book customizado con otros usuarios
+-- Permitir subir videos y que se vean en las paginas con un icono de play/pause
+-- Permitir Subir musica/video de fondo background
+
 - Rollercoaster con storytelling disney
 -- 1 - movimiento de camara mostrando el escenario
 -- 2 - interaccion para montarse en el Rollercoaster
