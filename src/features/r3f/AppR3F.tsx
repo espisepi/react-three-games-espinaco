@@ -1,4 +1,5 @@
 import { ClickToStart } from "../clickToStart/ClickToStart"
+import ImageUploader from "../image-uploader/ImageUploader"
 import CanvasManager from "./canvas/manager/CanvasManager"
 
 const AppR3F = () => {
@@ -10,6 +11,7 @@ const AppR3F = () => {
 
           {/* <CanvasManager style={ {backgroundColor: "black"} } /> */}
           <CanvasManager />
+          <ImageUploader />
         </header>
       </div>
     </ClickToStart>
